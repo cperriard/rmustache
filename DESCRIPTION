@@ -1,0 +1,9 @@
+Package: rmustache
+Type: Package
+Title: R implementation of the templating language mustache
+Version: 0.1
+Date: 2014-07-28
+Author: Cedric Perriard
+Maintainer: Cedric Perriard <c@perriard.se>
+Description: ...
+License: AGPL-3
