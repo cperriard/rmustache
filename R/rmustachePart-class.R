@@ -55,6 +55,7 @@ rmustachePart <- setRefClass("rmustachePart",
                                          return(ifelse(!is.null(.self$value), .self$value, ""))
                                      } else {
                                          if (.self$type %in% c("name", "{", "&")) {
+                                             #browser()
                                              if (is.in.data) {
                                                  return(data[[.self$name]])
                                              } else {
@@ -64,7 +65,7 @@ rmustachePart <- setRefClass("rmustachePart",
                                          } else if (.self$type == "#") {
                                              if (is.in.data && !identical(FALSE, data[[.self$name]]) && length(data[[.self$name]]) > 0) {
                                                  for (i in 1:length(.self$value)) {
-                                                     .self$value[[i]] <- .self$value[[i]]$render(data)
+                                                     .self$value[[i]] <- .self$value[[i]]$render(c(data[[.self$name]], data))
                                                  }
                                                  return(paste0(unlist(.self$value), collapse = ""))
                                              } else {
