@@ -1,4 +1,6 @@
-#' @export
+#' @import methods
+#' @export rmustachePart
+#' @exportClass rmustachePart 
 rmustachePart <- setRefClass("rmustachePart", 
                              fields = list(
                                  type = "character", 
@@ -10,6 +12,7 @@ rmustachePart <- setRefClass("rmustachePart",
                              methods = list(
                                  initialize = function (type = c("string", 
                                                                  "name", 
+                                                                 "{", 
                                                                  "&", 
                                                                  "#", 
                                                                  "^", 
@@ -51,21 +54,23 @@ rmustachePart <- setRefClass("rmustachePart",
                                      if (.self$type == "string") {
                                          return(ifelse(!is.null(.self$value), .self$value, ""))
                                      } else {
-                                         if (.self$type == "name") {
-                                             return(data[[.self$name]])
-                                         } else if (.self$type == "#") {
-                                             browser()
+                                         if (.self$type %in% c("name", "{", "&")) {
                                              if (is.in.data) {
+                                                 return(data[[.self$name]])
+                                             } else {
+                                                 return("")
+                                             }
+                                             
+                                         } else if (.self$type == "#") {
+                                             if (is.in.data && !identical(FALSE, data[[.self$name]]) && length(data[[.self$name]]) > 0) {
                                                  for (i in 1:length(.self$value)) {
-                                                     .self$value[[i]] <- .self$value[[i]]$render(data[[.self$name]])
+                                                     .self$value[[i]] <- .self$value[[i]]$render(data)
                                                  }
                                                  return(paste0(unlist(.self$value), collapse = ""))
                                              } else {
                                                  return("")
                                              }
                                          } else if (.self$type == "^") {
-                                             cat("^")
-                                             browser()
                                              if (!is.in.data) {
                                                  if (is.list(.self$value)) {
                                                      for (i in 1:length(.self$value)) {
@@ -76,7 +81,7 @@ rmustachePart <- setRefClass("rmustachePart",
                                                      return(ifelse(!is.null(.self$value), .self$value, ""))
                                                  }
                                              }
-                                         } else if (.self$type == "root") {
+                                         } else if (.self$type %in% c("root", ">")) {
                                              for (i in 1:length(.self$value)) {
                                                  .self$value[[i]] <- .self$value[[i]]$render(data)
                                              }

@@ -2,4 +2,7 @@
 
 export(nest_parts)
 export(parse_template)
+export(render_mustache)
+export(rmustachePart)
 exportClasses(rmustachePart)
+import(methods)
