@@ -26,4 +26,6 @@ nested.tree <- nest_parts(tree)
 
 root.template <- rmustachePart(type = "root", value = nested.tree)
 
-root.template$render(data = list("header" = "foo"))
+root.template$render(data = list("header" = "foo", "empty" = FALSE, "foo" = "bar"))
+
+render_mustache(template, data = list("header" = "foo", "empty" = FALSE, "foo" = "bar"))
