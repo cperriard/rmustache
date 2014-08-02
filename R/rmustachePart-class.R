@@ -48,43 +48,45 @@ rmustachePart <- setRefClass("rmustachePart",
                                          )
                                  }, 
                                  
-                                 render = function (data) {
-                                     is.in.data <- !is.null(.self$name) && .self$name %in% names(data)
+                                 render = function (data, context = NULL) {
+                                     if (is.null(context)) {
+                                         context <- rmustacheContext(data)
+                                     }
                                      
                                      if (.self$type == "string") {
                                          return(ifelse(!is.null(.self$value), .self$value, ""))
                                      } else {
+                                         if (.self$type != "root") {
+                                             .value <- context$lookup(.self$name)
+                                         }
+                                         
                                          if (.self$type %in% c("name", "{", "&")) {
                                              #browser()
-                                             if (is.in.data) {
-                                                 return(data[[.self$name]])
-                                             } else {
-                                                 return("")
-                                             }
-                                             
+                                             return(ifelse(!is.null(.value), .value, ""))
+                                                 
                                          } else if (.self$type == "#") {
-                                             if (is.in.data && !identical(FALSE, data[[.self$name]]) && length(data[[.self$name]]) > 0) {
+                                             if (!is.null(.value) && !identical(FALSE, .value) && length(.value) > 0) {
                                                  for (i in 1:length(.self$value)) {
-                                                     .self$value[[i]] <- .self$value[[i]]$render(c(data[[.self$name]], data))
+                                                     .self$value[[i]] <- .self$value[[i]]$render(data, context = rmustacheContext(.value, context))
                                                  }
                                                  return(paste0(unlist(.self$value), collapse = ""))
                                              } else {
                                                  return("")
                                              }
                                          } else if (.self$type == "^") {
-                                             if (!is.in.data) {
-                                                 if (is.list(.self$value)) {
-                                                     for (i in 1:length(.self$value)) {
-                                                         .self$value[[i]] <- .self$value[[i]]$render(data)
-                                                     }
-                                                     return(paste0(unlist(.self$value), collapse = ""))
-                                                 } else {
-                                                     return(ifelse(!is.null(.self$value), .self$value, ""))
-                                                 }
-                                             }
+#                                              if (!is.in.data) {
+#                                                  if (is.list(.self$value)) {
+#                                                      for (i in 1:length(.self$value)) {
+#                                                          .self$value[[i]] <- .self$value[[i]]$render(data)
+#                                                      }
+#                                                      return(paste0(unlist(.self$value), collapse = ""))
+#                                                  } else {
+#                                                      return(ifelse(!is.null(.self$value), .self$value, ""))
+#                                                  }
+#                                              }
                                          } else if (.self$type %in% c("root", ">")) {
                                              for (i in 1:length(.self$value)) {
-                                                 .self$value[[i]] <- .self$value[[i]]$render(data)
+                                                 .self$value[[i]] <- .self$value[[i]]$render(data, context)
                                              }
                                              return(paste0(unlist(.self$value), collapse = ""))
                                          }
