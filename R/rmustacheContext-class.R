@@ -33,19 +33,23 @@ rmustacheContext <- setRefClass("rmustacheContext",
                                             context <- .self
                                             
                                             while (!is.null(context)) {
-#                                                 if (name.indexOf('.') > 0) {
-#                                                     value = context.view;
-#                                                     names = name.split('.');
-#                                                     index = 0;
-#                                                     
-#                                                     while (value != null && index < names.length)
-#                                                         value = value[names[index++]];
-#                                                 } else {
-                                                if (name %in% names(context$view)) {
-                                                    value <- context$view[[name]]
-                                                }
+                                                #browser()
+                                                if (str_detect(name, "\\.")) {
+                                                    value <- context$view
+                                                    names <- unlist(str_split(name, "\\."))
+                                                    index <- 1
                                                     
-#                                                 }
+                                                    while (!is.null(value) && index <= length(names)) {
+                                                        value <- value[[names[index]]]
+                                                        index <- index + 1
+                                                    }
+                                                        
+                                                } else {
+                                                    if (name %in% names(context$view)) {
+                                                        value <- context$view[[name]]
+                                                    }
+                                                    
+                                                }
                                                 
                                                 if (!is.null(value)) {
                                                     break
