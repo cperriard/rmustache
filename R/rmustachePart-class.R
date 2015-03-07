@@ -41,7 +41,7 @@ rmustachePart <- setRefClass("rmustachePart",
                                      }
                                      cat("\n    value: ")
                                      if (class(.self$value) == "list") {
-                                         cat("list of rustache parts:", length(.self$value), "part(s)\n")
+                                         cat("list of rmustache parts:", length(.self$value), "part(s)\n")
                                      }
                                      methods::show(.self$value)
                                      cat("\n--- rmustachePart: end   ---\n"
