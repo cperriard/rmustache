@@ -65,11 +65,24 @@ rmustachePart <- setRefClass("rmustachePart",
                                              return(ifelse(!is.null(.value), .value, ""))
                                                  
                                          } else if (.self$type == "#") {
+                                             #browser()
                                              if (!is.null(.value) && !identical(FALSE, .value) && length(.value) > 0) {
-                                                 for (i in 1:length(.self$value)) {
-                                                     .self$value[[i]] <- .self$value[[i]]$render(data, context = rmustacheContext(.value, context))
+                                                 .stash <- character(0)
+                                                 .tmp <- character(0)
+                                                 for (j in 1:length(.value)) {
+                                                     if (length(.value) > 1) {
+                                                         .value.tmp <- .value[[j]]
+                                                     } else {
+                                                         .value.tmp <- .value
+                                                     }
+                                                     for (i in 1:length(.self$value)) {
+                                                         .tmp[[i]] <- .self$value[[i]]$render(data, context = rmustacheContext(.value.tmp, context))
+                                                     }
+                                                     .stash <- c(.stash, unlist(.tmp))
+                                                     .tmp <- character(0)
                                                  }
-                                                 return(paste0(unlist(.self$value), collapse = ""))
+                                                 
+                                                 return(paste0(.stash, collapse = ""))
                                              } else {
                                                  return("")
                                              }
