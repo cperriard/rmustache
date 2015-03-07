@@ -41,7 +41,10 @@ rmustacheContext <- setRefClass("rmustacheContext",
 #                                                     while (value != null && index < names.length)
 #                                                         value = value[names[index++]];
 #                                                 } else {
+                                                if (name %in% names(context$view)) {
                                                     value <- context$view[[name]]
+                                                }
+                                                    
 #                                                 }
                                                 
                                                 if (!is.null(value)) {
