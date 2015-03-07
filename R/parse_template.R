@@ -1,4 +1,5 @@
 
+#' @import stringr
 #' @export
 parse_template <- function (template) {
     
@@ -24,9 +25,39 @@ parse_template <- function (template) {
         } else {
             value <- ""
         }
-        tree <- c(tree, 
-                  list(rmustachePart(type = "string", 
-                                     value = value)))
+        if (value != ""){
+            #browser()
+            # split string into newline and remove lines containing only whitespace
+            splitted.value <- unlist(str_split(value, "\n"))
+            if (length(splitted.value) > 1){
+                for (i in 1:length(splitted.value)) {
+                    if ((str_trim(splitted.value[i], side = "left") != "" && 
+                            i < length(splitted.value)) | 
+                            (str_trim(splitted.value[i], side = "left") == "") && 
+                            i == 1 && 
+                            tree[[length(tree)]]$type %in% c("name")) {
+                        splitted.value[i] <- paste0(str_trim(splitted.value[i], side = "left"), "\n")
+                    }
+                }
+            }
+            
+            value <- paste0(splitted.value, collapse = "")
+            
+#             if (length(tree) > 0 && 
+#                     length(splitted.value) > 1 && 
+#                     splitted.value[1] == "" &&
+#                     tree[[length(tree)]]$type == "name") {
+#                 browser()
+#                 value <- paste0("\n", value)
+#             }
+            
+            if (value != ""){
+                tree <- c(tree, 
+                          list(rmustachePart(type = "string", 
+                                             value = value)))
+            }
+        }
+        
         tail <- substr(tail, pos+match.length, nchar(tail))
         
         type.pos <- regexpr("^[\\&\\{#^/>=]", tail)
