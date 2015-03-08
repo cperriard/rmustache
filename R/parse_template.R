@@ -36,7 +36,7 @@ parse_template <- function (template) {
                             (str_trim(splitted.value[i], side = "left") == "") && 
                             i == 1 && 
                             tree[[length(tree)]]$type %in% c("name")) {
-                        splitted.value[i] <- paste0(str_trim(splitted.value[i], side = "left"), "\n")
+                        splitted.value[i] <- paste0(splitted.value[i], "\n") #paste0(str_trim(splitted.value[i], side = "left"), "\n")
                     }
                 }
             }
