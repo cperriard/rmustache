@@ -36,3 +36,28 @@ nestTokens <- function (tokens) {
 }
 
 
+# Combines the values of consecutive text tokens in the given `tokens` array
+# to a single token.
+
+squashTokens <- function (tokens) {
+    squashedTokens <- list()
+    
+    token <- NULL
+    lastToken <- NULL
+    for (i in 1:length(tokens) {
+        token <- tokens[[i]]
+        
+        if (!is.null(token)) {
+            if (token[[1]] == "text" && !is.null(lastToken) && lastToken[[1]] == "text") {
+                lastToken[[2]] <- paste0(lastToken[[2]], token[[2]];
+                lastToken[[4]] <- token[[4]]
+            } else {
+                
+                squashedTokens[[length(squashedTokens) + 1]] <- token
+                lastToken <- token
+            }
+        }
+    }
+    
+    return(squashedTokens)
+}
