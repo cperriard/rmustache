@@ -61,3 +61,5 @@ squashTokens <- function (tokens) {
     
     return(squashedTokens)
 }
+
+
