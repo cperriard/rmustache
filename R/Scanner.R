@@ -46,6 +46,7 @@ Scanner <- function (string) {
         return(match)
     }
     
+    class(this) <- "Scanner"
     return(this)
 }
 

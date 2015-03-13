@@ -16,6 +16,7 @@ Context <- function Context(view, parentContext = NULL) {
     # Returns the value of the given name in this context, traversing
     # up the context hierarchy if the value is absent in this context's view.
     this$lookup <- function (name) {
+        value <- null
         if (name %in% names(this$cache)) {
             value <- this$cache[[name]]
         } else {
@@ -46,6 +47,7 @@ Context <- function Context(view, parentContext = NULL) {
         return(value)
     }
     
+    class(this) <- "Context"
     
     return(this)
 }
